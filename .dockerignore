@@ -1,0 +1,12 @@
+.git
+.gitignore
+test_data
+docs
+*.md
+!README.md
+__pycache__
+*.pyc
+.venv
+venv
+bin
+setup.py

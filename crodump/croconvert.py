@@ -109,6 +109,7 @@ def main():
         class Cls: pass
         cargs = Cls()
         cargs.dbdir = args.dbdir
+        cargs.compact = args.compact
         cargs.sys = False
         cargs.silent = True
         cracked = strucrack(None, cargs)
@@ -119,6 +120,7 @@ def main():
         class Cls: pass
         cargs = Cls()
         cargs.dbdir = args.dbdir
+        cargs.compact = args.compact
         cargs.sys = False
         cargs.silent = True
         cracked = dbcrack(None, cargs)
