@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cronos Database Dump</title>
+  </head>
+  <body>
+  {% for table in db.enumerate_tables(files=True) %}
+    <table>
+      <caption>{{ table.tablename | e }}</caption>
+      <thead>
+        <tr>
+        {%- for field in table.fields %}
+          <th>{{ field.name | e }}</th>
+        {%- endfor %}
+          <th>Data</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for system_number, file in db.enumerate_files(table) %}
+        <tr>
+          <td>{{ system_number | e }}</td>
+          <td><a href="data:application/x-binary;base64,{{ base64.b64encode( file ).decode('utf-8') }}">File content</a></td>
+        <tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endfor %}
+  {% for table in db.enumerate_tables(files=False) %}
+    {%- if table.tableimage -%}
+      <img src="data:image;base64,{{ base64.b64encode( table.tableimage.data ).decode('utf-8') }}"/>
+    {%- endif -%}
+    <table>
+      <caption>{{ table.tablename | e }}</caption>
+      <thead>
+        <tr>
+        {%- for field in table.fields %}
+          <th>{{ field.name | e }}</th>
+        {%- endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {%- for record in db.enumerate_records( table ) %}
+        <tr>
+          {%- for field in record.fields %}
+            {%- if field.typ == 6 and field.content -%}
+            <td><a download="{{ field.filename }}.{{ field.extname }}" href="data:application/x-binary;base64,{{ db.get_record( field.filedatarecord, True ) }}">{{ field.filename | e }}.{{ field.extname | e }}</a></td>
+            {%- else -%}
+            <td>{{ field.content | e }}</td>
+            {%- endif -%}
+          {%- endfor %}
+        </tr>
+        {%- endfor %}
+      </tbody>
+    </table>
+    {% endfor %}
+  </body>
+</html>
